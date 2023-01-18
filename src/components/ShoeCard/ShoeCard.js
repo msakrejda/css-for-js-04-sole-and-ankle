@@ -35,20 +35,58 @@ const ShoeCard = ({
     <Link href={`/shoe/${slug}`}>
       <Wrapper>
         <ImageWrapper>
+          <Flair variant={variant} />
           <Image alt="" src={imageSrc} />
         </ImageWrapper>
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price>{formatPrice(price)}</Price>
+          {variant === 'on-sale'
+            ? <OriginalPrice>{formatPrice(price)}</OriginalPrice>
+            : <Price>{formatPrice(price)}</Price>}
         </Row>
         <Row>
           <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
+          {variant === 'on-sale' && <SalePrice>{formatPrice(salePrice)}</SalePrice>}
         </Row>
       </Wrapper>
     </Link>
   );
 };
+
+const Flair = ({
+  variant
+}) => {
+  if (variant === 'default') {
+    return null;
+  }
+  if (variant === 'new-release') {
+    return <NewFlair>Just Released!</NewFlair>
+  }
+  if (variant === 'on-sale') {
+    return <SaleFlair>Sale</SaleFlair>
+  }
+}
+
+const BaseFlair = styled.div`
+  position: absolute;
+  top: 16px;
+  right: -4px;
+  color: ${COLORS.white};
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 8px;
+  border-radius: 2px;
+  background-color: var(--bg-color);
+`;
+
+const NewFlair = styled(BaseFlair)`
+  --bg-color: ${COLORS.secondary};
+`;
+
+const SaleFlair = styled(BaseFlair)`
+  --bg-color: ${COLORS.primary};
+`;
 
 const Link = styled.a`
   text-decoration: none;
@@ -61,10 +99,15 @@ const ImageWrapper = styled.div`
   position: relative;
 `;
 
-const Image = styled.img``;
+const Image = styled.img`
+  display: block;
+  width: 100%;
+`;
 
 const Row = styled.div`
   font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const Name = styled.h3`
@@ -73,6 +116,10 @@ const Name = styled.h3`
 `;
 
 const Price = styled.span``;
+const OriginalPrice = styled.span`
+  text-decoration: line-through;
+  color: ${COLORS.gray[700]};
+`;
 
 const ColorInfo = styled.p`
   color: ${COLORS.gray[700]};

@@ -26,7 +26,7 @@ const VisuallyHidden = ({ children, ...delegated }) => {
     }
   }, []);
 
-  if (forceShow) {
+  if (forceShow && false) {
     return children;
   }
 
